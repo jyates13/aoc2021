@@ -28,6 +28,7 @@ def part1(dims, vents):
             slice = counts[miny:maxy+1, minx:maxx+1]
             slice += 1
             crosses += np.sum(slice == 2) 
+    
     print(counts)
     return crosses
 
@@ -36,15 +37,14 @@ def part2(dims, vents):
     counts = np.zeros(dims)
     crosses = 0
     for start, end in vents:
+        xdir = 1 if end[0] >= start[0] else -1
+        ydir = 1 if end[1] >= start[1] else -1
         if (start[0] == end[0]) or (start[1] == end[1]):
-            minx, maxx = (start[0], end[0]) if start[0] < end[0] else (end[0], start[0])
-            miny, maxy = (start[1], end[1]) if start[1] < end[1] else (end[1], start[1])
-            slice = counts[miny:maxy+1, minx:maxx+1]
+            slice = counts[start[1]:end[1]+ydir:ydir, 
+                           start[0]:end[0]+xdir:xdir]
             slice += 1
             crosses += np.sum(slice == 2)
         else:
-            xdir = (end[0]-start[0])//abs(end[0]-start[0])
-            ydir = (end[1]-start[1])//abs(end[1]-start[1])
             for loc in zip(range(start[1], end[1] + ydir, ydir),
                            range(start[0], end[0] + xdir, xdir)):
                 counts[loc] += 1
